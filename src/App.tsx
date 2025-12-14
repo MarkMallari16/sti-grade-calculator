@@ -35,16 +35,10 @@ function App() {
     const prefinals = Number(grades.prefinals)
     const finals = Number(grades.finals)
 
-    if (prelims < 0 || midterm < 0 || prefinals < 0 || finals < 0) {
-      alert("Grades cannot be negative")
+    if (grades.prelims === "" || grades.midterm === "" || grades.prefinals === "" || grades.finals === "") {
+      alert("Please fill in all fields")
       return;
     }
-
-    if ([prelims, midterm, prefinals, finals].some(isNaN)) {
-      alert("Grades must be numbers")
-      return;
-    }
-
     const weight = 20
     const finalWeight = 40;
 
@@ -57,7 +51,18 @@ function App() {
       modalRef.current?.showModal();
     }
   }
+  const resetFields = () => {
+    setGrades({
+      prelims: "",
+      midterm: "",
+      prefinals: "",
+      finals: ""
+    });
 
+    if (modalRef.current){
+      modalRef.current?.close()
+    }
+  }
 
   return (
     <>
@@ -67,7 +72,7 @@ function App() {
           <h3 className="font-bold text-2xl">Hello!, Your Final Grade is {finalGrade}</h3>
           <div className="modal-action">
             <button className="btn" onClick={() => modalRef.current?.close()}>Close</button>
-            <button className="btn btn-primary" onClick={() => modalRef.current?.close()}>Calculate Again</button>
+            <button className="btn btn-primary" onClick={resetFields}>Calculate Again</button>
           </div>
         </div>
       </dialog>
@@ -96,19 +101,19 @@ function App() {
                 </div>
                 <div className='mb-2'>
                   <label htmlFor="prelims">Enter Grade for Prelims</label>
-                  <input type="text" className='input inline-block w-full' placeholder='eg: 75' name='prelims' value={grades.prelims} onChange={handleInputChange} id='prelims' />
+                  <input type="number" className='input inline-block w-full' placeholder='eg: 75' name='prelims' value={grades.prelims} onChange={handleInputChange} id='prelims' />
                 </div>
                 <div className='mb-2'>
                   <label htmlFor="midterm">Enter Grade for Midterm</label>
-                  <input type="text" className='input inline-block w-full' placeholder='eg: 75' name='midterm' value={grades.midterm} onChange={handleInputChange} id='midterm' />
+                  <input type="number" className='input inline-block w-full' placeholder='eg: 75' name='midterm' value={grades.midterm} onChange={handleInputChange} id='midterm' />
                 </div>
                 <div className='mb-2'>
                   <label htmlFor="prefinals">Enter Grade for Pre-Finals</label>
-                  <input type="text" className='input inline-block w-full' placeholder='eg: 75' name='prefinals' value={grades.prefinals} onChange={handleInputChange} id='prefinals' />
+                  <input type="number" className='input inline-block w-full' placeholder='eg: 75' name='prefinals' value={grades.prefinals} onChange={handleInputChange} id='prefinals' />
                 </div>
                 <div >
                   <label htmlFor="finals">Enter Grade for Finals</label>
-                  <input type="text" className='input inline-block w-full' placeholder='eg: 75' name='finals' value={grades.finals} onChange={handleInputChange} id='finals' />
+                  <input type="number" className='input inline-block w-full' placeholder='eg: 75' name='finals' value={grades.finals} onChange={handleInputChange} id='finals' />
                 </div>
                 <button className='mt-3 btn btn-primary w-full' onClick={handleCalculate}>Calculate</button>
               </div>
