@@ -149,7 +149,7 @@ export default function CalculatorPage({ saveHistory }: CalculatorPageProps) {
                             onChange={(e) => setHistoryTitle(e.target.value)}
                         />
                     </div>
-                    <div className="modal-action justify-center mt-8">
+                    <div className="modal-action flex flex-col lg:flex-row gap-2 justify-center mt-8">
                         <button className="btn btn-ghost" onClick={() => modalRef.current?.close()}>Dismiss</button>
                         <button className="btn btn-border" onClick={resetFields}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
@@ -168,7 +168,7 @@ export default function CalculatorPage({ saveHistory }: CalculatorPageProps) {
             </dialog>
 
             {/**Content */}
-            <div className='ring ring-inset ring-base-300 rounded-md p-10 h-fit'>
+            <div className='ring ring-inset ring-base-300 rounded-md p-6 lg:p-10 h-fit'>
                 <div className='mb-4 flex items-center gap-4'>
                     <img src="./src/assets/sti-logo.png" alt="STI Logo" className='w-18 h-18 lg:w-20 lg:h-20 object-cover rounded-md' />
                     <div>
@@ -205,10 +205,10 @@ export default function CalculatorPage({ saveHistory }: CalculatorPageProps) {
                     Calculate
                 </button>
             </div>
-            <div className='ring ring-inset ring-base-300 rounded-md p-10 '>
+            <div className='ring ring-inset ring-base-300 rounded-md p-6 lg:p-10'>
                 <div className='mb-4'>
-                    <h1 className='text-2xl font-bold'>Grades Table</h1>
-                    <p>Displays the entered grades for each grading period along with their corresponding weights and computed results, providing a clear breakdown of how the final grade is calculated.</p>
+                    <h1 className='text-2xl lg:text-2xl font-bold'>Grades Table</h1>
+                    <p className='text-sm lg:text-sm font-normal'>Displays the entered grades for each grading period along with their corresponding weights and computed results, providing a clear breakdown of how the final grade is calculated.</p>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="table">
