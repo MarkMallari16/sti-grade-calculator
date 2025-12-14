@@ -42,9 +42,7 @@ export default function CalculatorPage({ saveHistory }: CalculatorPageProps) {
         const { name, value } = e.target;
         let error = "";
 
-        if (!value) {
-            error = "This field is required";
-        } else {
+        if (value) {
             const numValue = Number(value);
             if (numValue < 0 || numValue > 100) {
                 error = "Grade must be between 0 and 100";
@@ -68,21 +66,9 @@ export default function CalculatorPage({ saveHistory }: CalculatorPageProps) {
         const prefinals = Number(grades.prefinals)
         const finals = Number(grades.finals)
 
-        // Check for empty fields
-        const newErrors: Partial<Grades> = {};
-        let hasError = false;
-
-        (Object.keys(grades) as Array<keyof Grades>).forEach((key) => {
-            if (!grades[key]) {
-                newErrors[key] = "This field is required";
-                hasError = true;
-            } else if (errors[key]) {
-                hasError = true;
-            }
-        });
-
-        if (hasError) {
-            setErrors(prev => ({ ...prev, ...newErrors }));
+        // Check for existing errors
+        const hasErrors = Object.values(errors).some(error => error);
+        if (hasErrors) {
             return;
         }
         const weight = 20
@@ -165,13 +151,13 @@ export default function CalculatorPage({ saveHistory }: CalculatorPageProps) {
                     </div>
                     <div className="modal-action justify-center mt-8">
                         <button className="btn btn-ghost" onClick={() => modalRef.current?.close()}>Dismiss</button>
-                        <button className="btn btn-primary" onClick={resetFields}>
+                        <button className="btn btn-border" onClick={resetFields}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
                             </svg>
                             New Input
                         </button>
-                        <button className="btn btn-secondary" onClick={onSave}>
+                        <button className="btn btn-primary" onClick={onSave}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
                             </svg>
@@ -184,10 +170,10 @@ export default function CalculatorPage({ saveHistory }: CalculatorPageProps) {
             {/**Content */}
             <div className='ring ring-inset ring-base-300 rounded-md p-10 h-fit'>
                 <div className='mb-4 flex items-center gap-4'>
-                    <img src="./src/assets/sti-logo.png" alt="STI Logo" className='w-20 h-20 object-cover rounded-md' />
+                    <img src="./src/assets/sti-logo.png" alt="STI Logo" className='w-18 h-18 lg:w-20 lg:h-20 object-cover rounded-md' />
                     <div>
-                        <h1 className='text-2xl font-bold'>STI College Grades Calculator</h1>
-                        <p>
+                        <h1 className='text-lg lg:text-2xl font-bold'>STI College Grades Calculator</h1>
+                        <p className='text-sm lg:text-sm font-normal'>
                             A web-based grade calculator designed for STI students to compute grades quickly and accurately.
                         </p>
                     </div>

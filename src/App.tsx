@@ -7,7 +7,7 @@ import type { HistoryItem, Grades } from './types';
 
 function App() {
   // Theme state management
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "black");
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "my-dark");
 
   const [history, setHistory] = useState<HistoryItem[]>(() => {
     const saved = localStorage.getItem("grade_history");
@@ -16,6 +16,7 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem("theme", theme);
+    document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
   useEffect(() => {
@@ -24,9 +25,9 @@ function App() {
 
   const handleThemeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setTheme("lofi");
+      setTheme("my-light");
     } else {
-      setTheme("black");
+      setTheme("my-dark");
     }
   };
 

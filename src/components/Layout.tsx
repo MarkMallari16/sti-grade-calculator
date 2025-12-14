@@ -25,9 +25,9 @@ export default function Layout({ theme, handleThemeChange }: LayoutProps) {
                         <label className="toggle text-base-content">
                             <input
                                 type="checkbox"
-                                value="lofi"
+                                value="my-light"
                                 className="theme-controller"
-                                checked={theme === "lofi"}
+                                checked={theme === "my-light"}
                                 onChange={handleThemeChange}
                             />
 
