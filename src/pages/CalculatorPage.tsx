@@ -143,7 +143,7 @@ export default function CalculatorPage({ saveHistory }: CalculatorPageProps) {
                         </label>
                         <input
                             type="text"
-                            placeholder="e.g. 1st Year - 1st Sem"
+                            placeholder="e.g. 1st Sem - Computer Programming 1"
                             className="input input-bordered w-full"
                             value={historyTitle}
                             onChange={(e) => setHistoryTitle(e.target.value)}

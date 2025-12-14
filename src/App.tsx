@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Routes, Route } from 'react-router';
 import Layout from './components/Layout';
 import CalculatorPage from './pages/CalculatorPage';
+import AnalyticsPage from './pages/AnalyticsPage';
 import HistoryPage from './pages/HistoryPage';
 import type { HistoryItem, Grades } from './types';
 
@@ -72,6 +73,7 @@ function App() {
       <Route path="/" element={<Layout theme={theme} handleThemeChange={handleThemeChange} />}>
         <Route index element={<CalculatorPage saveHistory={saveHistory} />} />
         <Route path="history" element={<HistoryPage history={history} deleteHistoryItem={deleteHistoryItem} clearHistory={clearHistory} />} />
+        <Route path="analytics" element={<AnalyticsPage history={history} />} />
       </Route>
     </Routes>
   );
