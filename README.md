@@ -1,5 +1,7 @@
 # 🎓 STI Grade Calculator
 
+<img width="1917" height="898" alt="image" src="https://github.com/user-attachments/assets/89df6d1c-5618-4c34-9e78-d43d040d497c" />
+
 A web-based grade calculator designed for **STI College students** to compute their grades quickly, accurately, and clearly. The application allows users to input grades for each grading period and instantly see computed results based on the STI grading system.
 
 ---
