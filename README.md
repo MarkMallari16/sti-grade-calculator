@@ -3,7 +3,7 @@
 <img width="1919" height="895" alt="image" src="https://github.com/user-attachments/assets/cd2e39e7-43d3-4a4d-8383-92fd6898d37d" />
 <img width="1900" height="910" alt="image" src="https://github.com/user-attachments/assets/5a5daa58-6915-47c0-bba6-6e9319f70edb" />
 <img width="1914" height="907" alt="image" src="https://github.com/user-attachments/assets/a1b86869-a99c-4e97-b7c8-746f9a53c076" />
-<img width="1916" height="902" alt="image" src="https://github.com/user-attachments/assets/93256d0b-dc3d-4a2b-9342-f7c3291bc84a" />
+<img width="1896" height="869" alt="image" src="https://github.com/user-attachments/assets/78350ddc-929d-4d3e-b743-7cfa98f1f5f7" />
 
 
 A web-based grade calculator designed for **STI College students** to compute their grades quickly, accurately, and clearly. The application allows users to input grades for each grading period and instantly see computed results based on the STI grading system.
