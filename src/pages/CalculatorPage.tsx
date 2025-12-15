@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import { getRemark, getRemarkColor, gradeRanges } from '../types';
 import type { Grades } from '../types';
 import { useLocation, useNavigate } from 'react-router';
-
+import STILogo from "../../public/sti-logo.png";
 interface CalculatorPageProps {
     saveHistory: (grades: Grades, finalGrade: string, title?: string, id?: number) => void;
 }
@@ -170,7 +170,7 @@ export default function CalculatorPage({ saveHistory }: CalculatorPageProps) {
             {/**Content */}
             <div className='ring ring-inset ring-base-300 rounded-md p-6 lg:p-10 h-fit'>
                 <div className='mb-4 flex items-center gap-4'>
-                    <img src="./src/assets/sti-logo.png" alt="STI Logo" className='w-18 h-18 lg:w-20 lg:h-20 object-cover rounded-md' />
+                    <img src={STILogo} alt="STI Logo" className='w-18 h-18 lg:w-20 lg:h-20 object-cover rounded-md' />
                     <div>
                         <h1 className='text-lg lg:text-2xl font-bold'>STI College Grades Calculator</h1>
                         <p className='text-sm lg:text-sm font-normal'>
@@ -180,22 +180,22 @@ export default function CalculatorPage({ saveHistory }: CalculatorPageProps) {
                 </div>
                 <div className='mb-2'>
                     <label htmlFor="prelims">Enter Grade for Prelims</label>
-                    <input type="number" className={`input inline-block w-full ${errors.prelims ? 'input-error' : ''}`} placeholder='eg: 75' name='prelims' value={grades.prelims} onChange={handleInputChange} id='prelims' />
+                    <input type="number" className={`input inline-block w-full ${errors.prelims ? 'input-error' : ''}`} placeholder='Enter grade (0–100)' name='prelims' value={grades.prelims} onChange={handleInputChange} id='prelims' />
                     {errors.prelims && <span className="text-error text-sm">{errors.prelims}</span>}
                 </div>
                 <div className='mb-2'>
                     <label htmlFor="midterm">Enter Grade for Midterm</label>
-                    <input type="number" className={`input inline-block w-full ${errors.midterm ? 'input-error' : ''}`} placeholder='eg: 75' name='midterm' value={grades.midterm} onChange={handleInputChange} id='midterm' />
+                    <input type="number" className={`input inline-block w-full ${errors.midterm ? 'input-error' : ''}`} placeholder='Enter grade (0–100)' name='midterm' value={grades.midterm} onChange={handleInputChange} id='midterm' />
                     {errors.midterm && <span className="text-error text-sm">{errors.midterm}</span>}
                 </div>
                 <div className='mb-2'>
                     <label htmlFor="prefinals">Enter Grade for Pre-Finals</label>
-                    <input type="number" className={`input inline-block w-full ${errors.prefinals ? 'input-error' : ''}`} placeholder='eg: 75' name='prefinals' value={grades.prefinals} onChange={handleInputChange} id='prefinals' />
+                    <input type="number" className={`input inline-block w-full ${errors.prefinals ? 'input-error' : ''}`} placeholder='Enter grade (0–100)' name='prefinals' value={grades.prefinals} onChange={handleInputChange} id='prefinals' />
                     {errors.prefinals && <span className="text-error text-sm">{errors.prefinals}</span>}
                 </div>
                 <div >
                     <label htmlFor="finals">Enter Grade for Finals</label>
-                    <input type="number" className={`input inline-block w-full ${errors.finals ? 'input-error' : ''}`} placeholder='eg: 75' name='finals' value={grades.finals} onChange={handleInputChange} id='finals' />
+                    <input type="number" className={`input inline-block w-full ${errors.finals ? 'input-error' : ''}`} placeholder='Enter grade (0–100)' name='finals' value={grades.finals} onChange={handleInputChange} id='finals' />
                     {errors.finals && <span className="text-error text-sm">{errors.finals}</span>}
                 </div>
                 <button className='mt-3 btn btn-primary w-full' onClick={handleCalculate}>
@@ -207,8 +207,8 @@ export default function CalculatorPage({ saveHistory }: CalculatorPageProps) {
             </div>
             <div className='ring ring-inset ring-base-300 rounded-md p-6 lg:p-10'>
                 <div className='mb-4'>
-                    <h1 className='text-2xl lg:text-2xl font-bold'>Grades Table</h1>
-                    <p className='text-sm lg:text-sm font-normal'>Displays the entered grades for each grading period along with their corresponding weights and computed results, providing a clear breakdown of how the final grade is calculated.</p>
+                    <h1 className='text-2xl lg:text-2xl font-bold'>Grading System</h1>
+                    <p className='text-sm lg:text-sm font-normal'>Shows grades per grading period, their weights, and the computed results used to determine the final grade.</p>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="table">
