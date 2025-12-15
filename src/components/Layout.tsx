@@ -48,6 +48,10 @@ export default function Layout({ theme, handleThemeChange }: LayoutProps) {
                 <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
                 <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64">
                     {/* Sidebar content here */}
+                    <div className="flex w-full items-center gap-3 p-4 is-drawer-close:justify-center is-drawer-close:p-2 overflow-hidden">
+                        <img src="/calculator.png" alt="STI Grade Calculator" className="h-8 w-auto object-contain transition-all duration-300" />
+                        <span className="font-bold text-sm is-drawer-close:hidden">STI College Grades Calculator</span>
+                    </div>
                     <ul className="menu w-full grow">
                         {/* List item */}
                         <li>
