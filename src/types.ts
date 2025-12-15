@@ -156,3 +156,11 @@ export const percentageToGWA = (percentage: number): number => {
     if (percentage >= 59.5) return 3.00;
     return 5.00;
 };
+
+// ==================== Goal Tracking Types ====================
+
+// Goal tracking type for analytics
+export type GWAGoal = {
+    targetGWA: number;
+    createdAt: string;
+};

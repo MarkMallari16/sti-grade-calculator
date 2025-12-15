@@ -5,7 +5,7 @@ import CalculatorPage from './pages/CalculatorPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 import HistoryPage from './pages/HistoryPage';
 import GWACalculatorPage from './pages/GWACalculatorPage';
-import type { HistoryItem, Grades } from './types';
+import type { HistoryItem, Grades, GWASubject } from './types';
 
 function App() {
   // Theme state management
@@ -16,6 +16,19 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
+  // Load subjects from localStorage for analytics
+  const [subjects, setSubjects] = useState<GWASubject[]>(() => {
+    const saved = localStorage.getItem('gwaSubjects');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  });
+
   useEffect(() => {
     localStorage.setItem("theme", theme);
     document.documentElement.setAttribute('data-theme', theme);
@@ -24,6 +37,31 @@ function App() {
   useEffect(() => {
     localStorage.setItem("grade_history", JSON.stringify(history));
   }, [history]);
+
+  // Listen for changes to subjects in localStorage (from GWACalculatorPage)
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const saved = localStorage.getItem('gwaSubjects');
+      if (saved) {
+        try {
+          setSubjects(JSON.parse(saved));
+        } catch {
+          setSubjects([]);
+        }
+      }
+    };
+
+    // Check for updates periodically (for same-tab updates)
+    const interval = setInterval(handleStorageChange, 1000);
+
+    // Listen for storage events (for cross-tab updates)
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   const handleThemeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
@@ -74,7 +112,7 @@ function App() {
       <Route path="/" element={<Layout theme={theme} handleThemeChange={handleThemeChange} />}>
         <Route index element={<CalculatorPage saveHistory={saveHistory} />} />
         <Route path="history" element={<HistoryPage history={history} deleteHistoryItem={deleteHistoryItem} clearHistory={clearHistory} />} />
-        <Route path="analytics" element={<AnalyticsPage history={history} />} />
+        <Route path="analytics" element={<AnalyticsPage history={history} subjects={subjects} />} />
         <Route path="gwa-calculator" element={<GWACalculatorPage history={history} />} />
       </Route>
     </Routes>
@@ -82,3 +120,4 @@ function App() {
 }
 
 export default App
+
