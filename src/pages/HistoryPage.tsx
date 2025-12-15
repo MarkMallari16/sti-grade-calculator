@@ -37,9 +37,6 @@ export default function HistoryPage({ history, deleteHistoryItem, clearHistory }
         confirmModalRef.current?.close();
     }
 
-    const goToCalculator = () => {
-        navigate('/');
-    }
     return (
         <div className='col-span-1 md:col-span-2 ring ring-inset ring-base-300 rounded-md p-6 md:p-10'>
             <dialog ref={confirmModalRef} className="modal">
