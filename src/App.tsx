@@ -4,6 +4,7 @@ import Layout from './components/Layout';
 import CalculatorPage from './pages/CalculatorPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 import HistoryPage from './pages/HistoryPage';
+import GWACalculatorPage from './pages/GWACalculatorPage';
 import type { HistoryItem, Grades } from './types';
 
 function App() {
@@ -74,6 +75,7 @@ function App() {
         <Route index element={<CalculatorPage saveHistory={saveHistory} />} />
         <Route path="history" element={<HistoryPage history={history} deleteHistoryItem={deleteHistoryItem} clearHistory={clearHistory} />} />
         <Route path="analytics" element={<AnalyticsPage history={history} />} />
+        <Route path="gwa-calculator" element={<GWACalculatorPage history={history} />} />
       </Route>
     </Routes>
   );

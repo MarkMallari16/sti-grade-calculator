@@ -53,3 +53,106 @@ export const getRemarkColor = (remark: string): string => {
             return "";
     }
 };
+
+// ==================== GWA Calculator Types ====================
+
+// Valid GWA grades (STI grading system)
+export const validGWAGrades = [1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 5.00];
+
+// Subject entry for GWA calculation
+export type GWASubject = {
+    id: number;
+    name: string;
+    units: number;
+    grade: number; // Uses GWA scale: 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 5.00
+};
+
+// Grade validation helper
+export const isValidGWAGrade = (grade: number): boolean => {
+    return validGWAGrades.includes(grade);
+};
+
+// Get remark for GWA grade
+export const getGWARemark = (grade: number): string => {
+    if (grade === 1.00) return "Excellent";
+    if (grade <= 1.75) return "Very Good";
+    if (grade <= 2.50) return "Satisfactory";
+    if (grade <= 3.00) return "Fair";
+    return "Failed";
+};
+
+// Get color for GWA grade
+export const getGWAGradeColor = (grade: number): string => {
+    if (grade <= 1.75) return "text-success";
+    if (grade <= 2.50) return "text-warning";
+    if (grade <= 3.00) return "text-info";
+    return "text-error";
+};
+
+// Check Dean's Lister eligibility (Term-based)
+// Requirements:
+// - GWA of 1.50 or higher in the term being evaluated
+// - No grades lower than 2.00 in all courses taken in the term
+export const isDeanLister = (gwa: number, subjects: GWASubject[]): boolean => {
+    if (subjects.length === 0) return false;
+    const hasFailedGrade = subjects.some(s => s.grade === 5.00);
+    const hasGradeLowerThan2 = subjects.some(s => s.grade > 2.00);
+
+    return gwa <= 1.50 && !hasFailedGrade && !hasGradeLowerThan2;
+};
+
+// Check President's Lister eligibility (Cumulative)
+// Requirements:
+// - Cumulative GWA of 1.50 or higher since initial enrollment
+// - No grades lower than 2.00 in all courses
+// - No failed subjects (5.00)
+// - No DRP or INC grades (not tracked in this calculator)
+export const isPresidentsLister = (gwa: number, subjects: GWASubject[]): boolean => {
+    if (subjects.length === 0) return false;
+    const hasFailedGrade = subjects.some(s => s.grade === 5.00);
+    const hasGradeLowerThan2 = subjects.some(s => s.grade > 2.00);
+
+    return gwa <= 1.50 && !hasFailedGrade && !hasGradeLowerThan2;
+};
+
+// Get academic status based on computed GWA and individual grades
+export const getAcademicStatus = (gwa: number, subjects: GWASubject[]): string => {
+    const hasFailedGrade = subjects.some(s => s.grade === 5.00);
+
+    if (hasFailedGrade) return "Failed";
+    if (gwa > 3.00) return "Failed";
+    if (gwa <= 1.75) return "Honor Student";
+    if (gwa <= 3.00) return "Passed";
+    return "Needs Improvement";
+};
+
+// Color for GWA-based academic status
+export const getStatusColor = (status: string): string => {
+    switch (status) {
+        case "Dean's Lister":
+        case "President's Lister":
+        case "Honor Student":
+            return "text-success";
+        case "Passed":
+            return "text-warning";
+        case "Failed":
+        case "Needs Improvement":
+            return "text-error";
+        default:
+            return "";
+    }
+};
+
+// Convert percentage grade to GWA grade
+export const percentageToGWA = (percentage: number): number => {
+    if (percentage >= 97.5) return 1.00;
+    if (percentage >= 94.5) return 1.25;
+    if (percentage >= 91.5) return 1.50;
+    if (percentage >= 86.5) return 1.75;
+    if (percentage >= 81.5) return 2.00;
+    if (percentage >= 76.0) return 2.25;
+    if (percentage >= 70.5) return 2.50;
+    if (percentage >= 65.0) return 2.75;
+    if (percentage >= 59.5) return 3.00;
+    return 5.00;
+};

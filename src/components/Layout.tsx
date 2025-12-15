@@ -60,11 +60,28 @@ export default function Layout({ theme, handleThemeChange }: LayoutProps) {
                                 className={({ isActive }) =>
                                     `is-drawer-close:tooltip is-drawer-close:tooltip-right ${isActive ? 'active' : ''}`
                                 }
-                                data-tip="Calculator"
+                                data-tip="Subject Calculator"
                             >
                                 {/* Calculator icon */}
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor" className="my-1.5 inline-block size-4"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
-                                <span className="is-drawer-close:hidden">Calculator</span>
+                                <span className="is-drawer-close:hidden">Subject Calculator</span>
+                            </NavLink>
+                        </li>
+
+                        {/* List item */}
+                        <li>
+                            <NavLink
+                                to="/gwa-calculator"
+                                className={({ isActive }) =>
+                                    `is-drawer-close:tooltip is-drawer-close:tooltip-right ${isActive ? 'active' : ''}`
+                                }
+                                data-tip="GWA Calculator"
+                            >
+                                {/* Calculator icon */}
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="my-1.5 inline-block size-4">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V13.5Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V18Zm2.498-6.75h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V13.5Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V18Zm2.504-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5Zm2.498-6.75h.008v.008h-.008v-.008ZM8.25 6h7.5v2.25h-7.5V6ZM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 0 0 2.25 2.25h10.5a2.25 2.25 0 0 0 2.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0 0 12 2.25Z" />
+                                </svg>
+                                <span className="is-drawer-close:hidden">GWA Calculator</span>
                             </NavLink>
                         </li>
 
@@ -84,6 +101,7 @@ export default function Layout({ theme, handleThemeChange }: LayoutProps) {
                                 <span className="is-drawer-close:hidden">History</span>
                             </NavLink>
                         </li>
+
 
                         {/* List item */}
                         <li>
