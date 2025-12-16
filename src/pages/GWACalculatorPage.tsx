@@ -213,6 +213,7 @@ export default function GWACalculatorPage({ history }: GWACalculatorPageProps) {
             name: item.title || 'Imported Subject',
             units: 3, // Default units
             grade: percentageToGWA(Number(item.finalGrade)),
+            sourceHistoryId: item.id,
         };
         setSubjects(prev => [...prev, importedSubject]);
         closeImportModal();
@@ -322,23 +323,27 @@ export default function GWACalculatorPage({ history }: GWACalculatorPageProps) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {history.map(item => (
-                                        <tr key={item.id} className="hover">
-                                            <td className="font-medium">{item.title}</td>
-                                            <td>{item.finalGrade}%</td>
-                                            <td className={getGWAGradeColor(percentageToGWA(Number(item.finalGrade)))}>
-                                                {percentageToGWA(Number(item.finalGrade)).toFixed(2)}
-                                            </td>
-                                            <td>
-                                                <button
-                                                    className="btn btn-xs btn-primary"
-                                                    onClick={() => importFromHistory(item)}
-                                                >
-                                                    Import
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
+                                    {history.map(item => {
+                                        const isImported = subjects.some(s => s.sourceHistoryId === item.id);
+                                        return (
+                                            <tr key={item.id} className="hover">
+                                                <td className="font-medium">{item.title}</td>
+                                                <td>{item.finalGrade}%</td>
+                                                <td className={getGWAGradeColor(percentageToGWA(Number(item.finalGrade)))}>
+                                                    {percentageToGWA(Number(item.finalGrade)).toFixed(2)}
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        className={`btn btn-xs ${isImported ? 'btn-disabled' : 'btn-primary'}`}
+                                                        onClick={() => !isImported && importFromHistory(item)}
+                                                        disabled={isImported}
+                                                    >
+                                                        {isImported ? 'Imported' : 'Import'}
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
                                 </tbody>
                             </table>
                         </div>

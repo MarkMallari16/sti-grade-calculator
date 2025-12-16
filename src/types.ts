@@ -65,6 +65,7 @@ export type GWASubject = {
     name: string;
     units: number;
     grade: number; // Uses GWA scale: 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00, 5.00
+    sourceHistoryId?: number; // ID of the history item this was imported from
 };
 
 // Grade validation helper
