@@ -9,6 +9,7 @@ import {
     isPresidentsLister,
 } from '../types';
 import type { GWASubject, HistoryItem } from '../types';
+import STILogo from "../../public/sti-logo.png";
 
 interface GWACalculatorPageProps {
     history: HistoryItem[];
@@ -27,6 +28,10 @@ export default function GWACalculatorPage({ history }: GWACalculatorPageProps) {
         }
         return [];
     });
+
+    // Previous Performance Selection
+    const [prevUnits, setPrevUnits] = useState<string>(() => localStorage.getItem('gwaPrevUnits') || '');
+    const [prevGWA, setPrevGWA] = useState<string>(() => localStorage.getItem('gwaPrevGWA') || '');
     const [editingSubject, setEditingSubject] = useState<GWASubject | null>(null);
     const [deleteTarget, setDeleteTarget] = useState<GWASubject | null>(null);
     const [showToast, setShowToast] = useState(false);
@@ -43,6 +48,12 @@ export default function GWACalculatorPage({ history }: GWACalculatorPageProps) {
         localStorage.setItem('gwaSubjects', JSON.stringify(subjects));
     }, [subjects]);
 
+    // Save previous settings
+    useEffect(() => {
+        localStorage.setItem('gwaPrevUnits', prevUnits);
+        localStorage.setItem('gwaPrevGWA', prevGWA);
+    }, [prevUnits, prevGWA]);
+
     const addModalRef = useRef<HTMLDialogElement>(null);
     const importModalRef = useRef<HTMLDialogElement>(null);
     const deleteModalRef = useRef<HTMLDialogElement>(null);
@@ -57,15 +68,35 @@ export default function GWACalculatorPage({ history }: GWACalculatorPageProps) {
         return weightedSum / totalUnits;
     };
 
+    const calculateCumulativeGWA = (): number | null => {
+        const pUnits = Number(prevUnits);
+        const pGWA = Number(prevGWA);
+        const cTotalUnits = subjects.reduce((sum, s) => sum + s.units, 0);
+
+        // If no valid previous data, return null (display nothing)
+        if (!pUnits || !pGWA) return null;
+
+        // Current Weighted Sum
+        const cWeightedSum = subjects.reduce((sum, s) => sum + (s.grade * s.units), 0);
+
+        // Previous Weighted Sum
+        const pWeightedSum = pGWA * pUnits;
+
+        // Combined
+        const combinedUnits = pUnits + cTotalUnits;
+        if (combinedUnits === 0) return null;
+
+        return (pWeightedSum + cWeightedSum) / combinedUnits;
+    };
+
     const gwa = calculateGWA();
+    const cumulativeGWA = calculateCumulativeGWA();
     const totalUnits = subjects.reduce((sum, s) => sum + s.units, 0);
     const academicStatus = gwa !== null ? getAcademicStatus(gwa, subjects) : null;
 
     // Check honor list eligibility
     const deansListerEligible = gwa !== null ? isDeanLister(gwa, subjects) : false;
-    const presidentsListerEligible = gwa !== null ? isPresidentsLister(gwa, subjects) : false;
-
-    // Toast notification helper
+    const presidentsListerEligible = gwa !== null ? isPresidentsLister(gwa, subjects) : false;    // Toast notification helper
     const showNotification = (message: string) => {
         setToastMessage(message);
         setShowToast(true);
@@ -368,11 +399,14 @@ export default function GWACalculatorPage({ history }: GWACalculatorPageProps) {
                 {/* Header Card */}
                 <div className="ring ring-inset ring-base-300 rounded-md p-6 lg:p-10">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                        <div>
-                            <h1 className="text-2xl font-bold">GWA Subject Calculator</h1>
-                            <p className="text-sm opacity-70 mt-1">
-                                Calculate your General Weighted Average based on individual subjects
-                            </p>
+                        <div className='flex items-center gap-4'>
+                            <img src={STILogo} alt="STI Logo" className='w-18 h-18 lg:w-20 lg:h-20 object-cover rounded-md' />
+                            <div>
+                                <h1 className="text-2xl font-bold">GWA Subject Calculator</h1>
+                                <p className="text-sm opacity-70 mt-1">
+                                    Calculate your General Weighted Average based on individual subjects
+                                </p>
+                            </div>
                         </div>
                         <div className="flex flex-wrap gap-2">
                             <button className="btn btn-primary btn-sm" onClick={openAddModal}>
@@ -400,58 +434,115 @@ export default function GWACalculatorPage({ history }: GWACalculatorPageProps) {
                 </div>
 
                 {/* GWA Summary Card - Sticky */}
-                <div className="sticky top-4 z-10 ring ring-inset ring-primary/30 bg-base-200 rounded-md p-6 shadow-lg">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                        <div>
-                            <div className="text-sm uppercase tracking-wider opacity-60 mb-1">Total Units</div>
-                            <div className="text-3xl font-bold">{totalUnits}</div>
-                        </div>
-                        <div>
-                            <div className="text-sm uppercase tracking-wider opacity-60 mb-1">Computed GWA</div>
-                            <div className={`text-4xl font-extrabold ${gwa !== null ? getGWAGradeColor(gwa) : ''}`}>
-                                {gwa !== null ? gwa.toFixed(2) : '—'}
+                <div className="sticky top-4 z-10 space-y-4">
+                    <div className="ring ring-inset ring-primary/30 bg-base-200 rounded-md p-6 shadow-lg">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                            <div>
+                                <div className="text-sm uppercase tracking-wider opacity-60 mb-1">Total Units</div>
+                                <div className="text-3xl font-bold">{totalUnits}</div>
+                            </div>
+                            <div>
+                                <div className="text-sm uppercase tracking-wider opacity-60 mb-1">Computed GWA</div>
+                                <div className={`text-4xl font-extrabold ${gwa !== null ? getGWAGradeColor(gwa) : ''}`}>
+                                    {gwa !== null ? gwa.toFixed(2) : '—'}
+                                </div>
+                            </div>
+                            <div>
+                                <div className="text-sm uppercase tracking-wider opacity-60 mb-1">Academic Status</div>
+                                <div className={`text-xl font-bold ${academicStatus ? getStatusColor(academicStatus) : ''}`}>
+                                    {academicStatus || '—'}
+                                </div>
                             </div>
                         </div>
-                        <div>
-                            <div className="text-sm uppercase tracking-wider opacity-60 mb-1">Academic Status</div>
-                            <div className={`text-xl font-bold ${academicStatus ? getStatusColor(academicStatus) : ''}`}>
-                                {academicStatus || '—'}
+
+                        {/* Cumulative GWA Section */}
+                        {(prevUnits && prevGWA) && (
+                            <div className="mt-6 pt-6 border-t border-base-content/10">
+                                <div className="flex flex-col items-center">
+                                    <div className="text-sm uppercase tracking-wider opacity-60 mb-1">Cumulative GWA</div>
+                                    <div className={`text-3xl font-bold ${cumulativeGWA !== null ? getGWAGradeColor(cumulativeGWA) : ''}`}>
+                                        {cumulativeGWA !== null ? cumulativeGWA.toFixed(2) : '—'}
+                                    </div>
+                                    <div className="text-xs opacity-50 mt-1">
+                                        (Prev: {prevGWA} @ {prevUnits} units + Curr: {gwa?.toFixed(2)} @ {totalUnits} units)
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Honor List Badges */}
+                        {(deansListerEligible || presidentsListerEligible) && (
+                            <div className="mt-6 pt-6 border-t border-base-300">
+                                <div className="text-sm uppercase tracking-wider opacity-60 mb-3 text-center">Academic Honors</div>
+                                <div className="flex flex-wrap justify-center gap-3">
+                                    {deansListerEligible && (
+                                        <div className="badge badge-lg badge-success gap-2 p-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" />
+                                            </svg>
+                                            <span className="font-bold">Dean's Lister</span>
+                                        </div>
+                                    )}
+                                    {presidentsListerEligible && (
+                                        <div className="badge badge-lg badge-warning gap-2 p-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+                                            </svg>
+                                            <span className="font-bold">President's Lister</span>
+                                        </div>
+                                    )}
+                                </div>
+                                <p className="text-xs opacity-50 text-center mt-3 max-w-md mx-auto">
+                                    {deansListerEligible && presidentsListerEligible
+                                        ? "You qualify for both honors! Dean's List is term-based, President's List requires cumulative GWA."
+                                        : deansListerEligible
+                                            ? "Dean's Honor List: GWA ≤ 1.50 with no grades lower than 2.00 in the term."
+                                            : "President's Honors List: Cumulative GWA ≤ 1.50 with no grades lower than 2.00."
+                                    }
+                                </p>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Configure Cumulative GWA Toggle */}
+                    <div className="collapse collapse-arrow bg-base-200 ring ring-inset ring-base-300">
+                        <input type="checkbox" />
+                        <div className="collapse-title text-sm font-medium opacity-70">
+                            Configure Previous Grades (for Cumulative GWA)
+                        </div>
+                        <div className="collapse-content">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                                <div className="form-control">
+                                    <label className="label">
+                                        <span className="label-text text-xs">Previous Total Units</span>
+                                    </label>
+                                    <input
+                                        type="number"
+                                        placeholder="0"
+                                        className="input input-sm input-bordered"
+                                        value={prevUnits}
+                                        onChange={(e) => setPrevUnits(e.target.value)}
+                                        min="0"
+                                    />
+                                </div>
+                                <div className="form-control">
+                                    <label className="label">
+                                        <span className="label-text text-xs">Previous GWA</span>
+                                    </label>
+                                    <input
+                                        type="number"
+                                        placeholder="1.00"
+                                        className="input input-sm input-bordered"
+                                        value={prevGWA}
+                                        onChange={(e) => setPrevGWA(e.target.value)}
+                                        step="0.01"
+                                        min="1.00"
+                                        max="5.00"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    {/* Honor List Badges */}
-                    {(deansListerEligible || presidentsListerEligible) && (
-                        <div className="mt-6 pt-6 border-t border-base-300">
-                            <div className="text-sm uppercase tracking-wider opacity-60 mb-3 text-center">Academic Honors</div>
-                            <div className="flex flex-wrap justify-center gap-3">
-                                {deansListerEligible && (
-                                    <div className="badge badge-lg badge-success gap-2 p-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" />
-                                        </svg>
-                                        <span className="font-bold">Dean's Lister</span>
-                                    </div>
-                                )}
-                                {presidentsListerEligible && (
-                                    <div className="badge badge-lg badge-warning gap-2 p-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
-                                        </svg>
-                                        <span className="font-bold">President's Lister</span>
-                                    </div>
-                                )}
-                            </div>
-                            <p className="text-xs opacity-50 text-center mt-3 max-w-md mx-auto">
-                                {deansListerEligible && presidentsListerEligible
-                                    ? "You qualify for both honors! Dean's List is term-based, President's List requires cumulative GWA."
-                                    : deansListerEligible
-                                        ? "Dean's Honor List: GWA ≤ 1.50 with no grades lower than 2.00 in the term."
-                                        : "President's Honors List: Cumulative GWA ≤ 1.50 with no grades lower than 2.00."
-                                }
-                            </p>
-                        </div>
-                    )}
                 </div>
 
                 {/* Subjects Table */}

@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { getRemark, getRemarkColor } from '../types';
 import type { HistoryItem } from '../types';
 import { useNavigate } from 'react-router';
+import STILogo from "../../public/sti-logo.png";
 
 interface HistoryPageProps {
     history: HistoryItem[];
@@ -84,9 +85,12 @@ export default function HistoryPage({ history, deleteHistoryItem, clearHistory }
             </dialog>
 
             <div className='flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4'>
-                <div>
-                    <h1 className='text-2xl font-bold'>Grade History</h1>
-                    <p>Your saved grade calculations.</p>
+                <div className='flex items-center gap-4'>
+                    <img src={STILogo} alt="STI Logo" className='w-18 h-18 lg:w-20 lg:h-20 object-cover rounded-md' />
+                    <div>
+                        <h1 className='text-2xl font-bold'>Grade History</h1>
+                        <p className='text-sm'>Your saved grade calculations.</p>
+                    </div>
                 </div>
                 <div className="flex gap-2">
                     <div className="join">
@@ -156,9 +160,9 @@ export default function HistoryPage({ history, deleteHistoryItem, clearHistory }
                                                 {getRemark(Number(item.finalGrade))}
                                             </td>
                                             <td >
-                                                <div className='flex items-center'>
+                                                <div className='flex gap-1'>
                                                     <button
-                                                        className="btn btn-square btn-md btn-info mr-2"
+                                                        className="btn btn-square btn-sm btn-ghost"
                                                         onClick={() => handleEdit(item)}
                                                     >
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
@@ -166,7 +170,7 @@ export default function HistoryPage({ history, deleteHistoryItem, clearHistory }
                                                         </svg>
                                                     </button>
                                                     <button
-                                                        className="btn btn-square btn-md btn-error "
+                                                        className="btn btn-square btn-sm btn-ghost text-error"
                                                         onClick={() => handleDeleteClick(item)}
                                                     >
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">

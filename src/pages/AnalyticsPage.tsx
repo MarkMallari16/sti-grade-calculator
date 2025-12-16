@@ -15,6 +15,7 @@ import { Line, Doughnut } from 'react-chartjs-2';
 import confetti from 'canvas-confetti';
 import type { HistoryItem, GWASubject, GWAGoal } from '../types';
 import { getGWAGradeColor, percentageToGWA } from '../types';
+import STILogo from "../../public/sti-logo.png";
 
 // Register Chart.js components
 ChartJS.register(
@@ -336,6 +337,7 @@ export default function AnalyticsPage({ history, subjects }: AnalyticsPageProps)
         <div className="col-span-1 md:col-span-2 space-y-6">
             {/* Header */}
             <div className='flex items-center gap-4 p-6 lg:p-10 bg-base-100 rounded-md ring ring-inset ring-base-300'>
+                <img src={STILogo} alt="STI Logo" className='w-18 h-18 lg:w-20 lg:h-20 object-cover rounded-md' />
                 <div>
                     <h1 className='text-2xl lg:text-3xl font-bold'>Performance Analytics</h1>
                     <p className='text-sm opacity-70 mt-1'>
